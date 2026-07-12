@@ -83,8 +83,20 @@ st.markdown("""
         color: #FFFFFF !important;
     }
 
-    /* --- BASE PARA TODAS LAS IMÁGENES --- */
-    div[data-testid="stImage"] img {
+    /* --- CORRECCIÓN DEL LOGO --- */
+    div[data-testid="column"]:nth-child(1) div[data-testid="stImage"] img {
+        border: none !important;
+        background-color: #FFFFFF !important;
+        border-radius: 12px;
+        padding: 8px;
+        box-shadow: 0px 4px 15px rgba(255,255,255,0.1) !important;
+        max-height: 100px;
+        object-fit: contain;
+    }
+
+    /* --- TAMAÑO DE LAS IMÁGENES PRINCIPALES Y ANIMACIÓN --- */
+    div[data-testid="column"]:nth-child(n+2) div[data-testid="stImage"] img,
+    div[data-testid="stImage"]:nth-child(n+2) img {
         border-radius: 8px;
         box-shadow: 0px 8px 20px rgba(0,0,0,0.5);
         border: 1px solid rgba(255, 255, 255, 0.3);
@@ -93,33 +105,13 @@ st.markdown("""
         margin: 0 auto;
         transition: transform 0.3s ease-in-out !important;
     }
-
-    /* --- ANIMACIÓN DE ZOOM (Aplica a la Galería) --- */
-    div[data-testid="stImage"] img:hover {
-        transform: scale(1.04) !important;
+    
+    div[data-testid="column"]:nth-child(n+2) div[data-testid="stImage"] img:hover,
+    div[data-testid="stImage"]:nth-child(n+2) img:hover {
+        transform: scale(1.03) !important; /* Zoom en imágenes */
     }
 
-    /* --- MAPA PRINCIPAL: ANULAR ZOOM --- */
-    /* El mapa está en el 2do bloque de columnas, le quitamos la animación para evitar lag */
-    div[data-testid="stHorizontalBlock"]:nth-of-type(2) div[data-testid="stImage"] img:hover {
-        transform: scale(1) !important; 
-    }
-
-    /* --- CORRECCIÓN DEL LOGO --- */
-    /* El logo está en el 1er bloque de columnas */
-    div[data-testid="stHorizontalBlock"]:nth-of-type(1) div[data-testid="stImage"] img {
-        border: none !important;
-        background-color: #FFFFFF !important;
-        border-radius: 12px;
-        padding: 8px;
-        box-shadow: 0px 4px 15px rgba(255,255,255,0.1) !important;
-        max-height: 100px;
-    }
-    div[data-testid="stHorizontalBlock"]:nth-of-type(1) div[data-testid="stImage"] img:hover {
-        transform: scale(1) !important; /* Anula el zoom en el logo */
-    }
-
-    /* --- TARJETAS DE MÉTRICAS (Estilo Cristal y Animación) --- */
+    /* --- TARJETAS DE MÉTRICAS (Estilo Cristal y Animación Unificada) --- */
     [data-testid="stMetric"] {
         background-color: rgba(255, 255, 255, 0.05); /* Cristal sutil */
         backdrop-filter: blur(10px);
@@ -135,6 +127,7 @@ st.markdown("""
     }
     
     [data-testid="stMetric"]:hover {
+        /* Misma animación de zoom que las imágenes */
         transform: scale(1.03) !important; 
         background-color: rgba(255, 255, 255, 0.1) !important;
         box-shadow: 0px 12px 25px rgba(0, 0, 0, 0.6) !important;
