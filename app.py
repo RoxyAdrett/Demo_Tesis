@@ -19,9 +19,6 @@ modelo = load_model()
 
 
 
-# Ejecutar tu lógica de predicción
-resultados = modelo.predict(source=selected_img, imgsz=960, conf=0.25, verbose=False)
-resultado = resultados[0]
 
 # --- INTERFAZ PERSONALIZADA ---
 col1, col2 = st.columns([2, 1])
@@ -36,6 +33,10 @@ with col2:
     selected_img = st.selectbox("Selecciona una imagen de prueba:", img_files)
     st.subheader("Estado del Recinto")
     
+    
+    # Ejecutar tu lógica de predicción
+    resultados = modelo.predict(source=selected_img, imgsz=960, conf=0.25, verbose=False)
+    resultado = resultados[0]
     # Tu lógica de conteo
     detecciones = []
     for box in resultado.boxes:
