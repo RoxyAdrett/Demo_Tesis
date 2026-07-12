@@ -8,7 +8,7 @@ import numpy as np
 
 # --- CONFIGURACIÓN DE PÁGINA ---
 st.set_page_config(
-    page_title="Q-SOC Parking | UBO",
+    page_title="IA Parking | UBO",
     page_icon="🚘",
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -49,8 +49,8 @@ st.markdown("""
         -webkit-backdrop-filter: blur(15px);
         border-radius: 20px;
         /* Líneas laterales iluminadas para demarcar el área */
-        border-left: 3px solid #00A4E4; 
-        border-right: 3px solid #00A4E4; 
+        border-left: 3px solid #FFFFFF; 
+        border-right: 3px solid #FFFFFF; 
         border-top: 1px solid rgba(255,255,255,0.1);
         border-bottom: 1px solid rgba(255,255,255,0.1);
         box-shadow: 
@@ -261,7 +261,7 @@ for i, img_name in enumerate(imagenes[:5]):
 
 # --- VIDEO DE DEMOSTRACIÓN ---
 st.markdown("---")
-st.markdown("<h3><span class='ubo-white'>🎥</span> Inferencia en Video Continuo</h3>", unsafe_allow_html=True)
+st.markdown("<h3><span class='ubo-white'>🎥</span> Ejemplo entrenamiento en Video Continuo</h3>", unsafe_allow_html=True)
 video_path = 'demo_video.mp4'
 if os.path.exists(video_path):
     v_col1, v_col2, v_col3 = st.columns([1, 3, 1])
