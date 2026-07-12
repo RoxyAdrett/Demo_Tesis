@@ -14,7 +14,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- ESTILOS CSS (DISEÑO TECNOLÓGICO CON TRAMA, PANEL FLOTANTE Y ANIMACIONES) ---
+# --- ESTILOS CSS (DISEÑO TECNOLÓGICO CON TRAMA Y PANEL FLOTANTE) ---
 st.markdown("""
 <style>
     /* Ocultar barra lateral y menús predeterminados */
@@ -27,7 +27,7 @@ st.markdown("""
     [data-testid="stAppViewContainer"] {
         background-color: #011528;
         background-image: 
-            radial-gradient(rgba(255, 255, 255, 0.15) 2px, transparent 2px), /* Puntos blancos sutiles */
+            radial-gradient(rgba(255, 255, 255, 0.15) 2px, transparent 2px), /* Puntos celestes sutiles */
             linear-gradient(135deg, #011528, #002D62) !important;
         background-size: 40px 40px, 100% 100%; /* Tamaño de la cuadrícula de puntos */
         background-attachment: fixed;
@@ -55,7 +55,7 @@ st.markdown("""
         border-bottom: 1px solid rgba(255,255,255,0.1);
         box-shadow: 
             0px 20px 50px rgba(0,0,0,0.7), /* Sombra exterior profunda */
-            inset 0px 0px 30px rgba(255, 255, 255, 0.05); /* Brillo interior sutil blanco */
+            inset 0px 0px 30px rgba(0, 164, 228, 0.05); /* Brillo interior sutil celeste */
     }
 
     /* --- RESPONSIVE DESIGN (Ajustes para celular) --- */
@@ -83,35 +83,35 @@ st.markdown("""
         color: #FFFFFF !important;
     }
 
-    /* --- TAMAÑO DE LAS IMÁGENES PRINCIPALES Y ANIMACIÓN --- */
-    /* Aplica a todas las imágenes por defecto */
-    div[data-testid="stImage"] img {
-        border-radius: 8px;
-        box-shadow: 0px 8px 20px rgba(0,0,0,0.5);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        max-height: 60vh;
-        object-fit: contain;
-        margin: 0 auto;
-        transition: transform 0.3s ease-in-out !important; /* Animación devuelta */
-    }
-    
-    div[data-testid="stImage"] img:hover {
-        transform: scale(1.03) !important; /* Zoom activo en mapa y galería */
-    }
-
     /* --- CORRECCIÓN DEL LOGO --- */
-    /* Excluye exclusivamente a la imagen del primer bloque (el logo) para que no tenga animación */
-    div[data-testid="stHorizontalBlock"]:nth-of-type(1) div[data-testid="stImage"] img {
+    div[data-testid="column"]:nth-child(1) div[data-testid="stImage"] img {
         border: none !important;
         background-color: #FFFFFF !important;
         border-radius: 12px;
         padding: 8px;
         box-shadow: 0px 4px 15px rgba(255,255,255,0.1) !important;
         max-height: 100px;
-        transform: scale(1) !important; /* Anula el zoom en el logo */
+        object-fit: contain;
     }
 
-    /* --- TARJETAS DE MÉTRICAS (Estilo Cristal) --- */
+    /* --- TAMAÑO DE LAS IMÁGENES PRINCIPALES Y ANIMACIÓN --- */
+    div[data-testid="column"]:nth-child(n+2) div[data-testid="stImage"] img,
+    div[data-testid="stImage"]:nth-child(n+2) img {
+        border-radius: 8px;
+        box-shadow: 0px 8px 20px rgba(0,0,0,0.5);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        max-height: 60vh;
+        object-fit: contain;
+        margin: 0 auto;
+        transition: transform 0.3s ease-in-out !important;
+    }
+    
+    div[data-testid="column"]:nth-child(n+2) div[data-testid="stImage"] img:hover,
+    div[data-testid="stImage"]:nth-child(n+2) img:hover {
+        transform: scale(1.03) !important; /* Zoom en imágenes */
+    }
+
+    /* --- TARJETAS DE MÉTRICAS (Estilo Cristal y Animación Unificada) --- */
     [data-testid="stMetric"] {
         background-color: rgba(255, 255, 255, 0.05); /* Cristal sutil */
         backdrop-filter: blur(10px);
@@ -122,12 +122,15 @@ st.markdown("""
         border-radius: 8px;
         box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3);
         margin-bottom: 1rem;
-        transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+        /* Transición fluida para el efecto de zoom */
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background-color 0.3s ease-in-out !important;
     }
     
     [data-testid="stMetric"]:hover {
-        transform: translateY(-5px);
-        background-color: rgba(255, 255, 255, 0.1);
+        /* Misma animación de zoom que las imágenes */
+        transform: scale(1.03) !important; 
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        box-shadow: 0px 12px 25px rgba(0, 0, 0, 0.6) !important;
     }
     
     [data-testid="stMetricValue"] {
