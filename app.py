@@ -14,7 +14,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- ESTILOS CSS (RESPONSIVE + FONDO CLARO + PANEL OSCURO) ---
+# --- ESTILOS CSS (FONDO AZUL ORIGINAL + ACENTOS BLANCOS + RESPONSIVE) ---
 st.markdown("""
 <style>
     /* Ocultar barra lateral y menús predeterminados */
@@ -23,33 +23,29 @@ st.markdown("""
     header {visibility: hidden;}
     footer {visibility: hidden;}
 
-    /* --- FONDO EXTERIOR (Claro, suave, no satura la vista) --- */
+    /* --- FONDO GENERAL (Gradiente Azul Marino UBO en toda la pantalla) --- */
     [data-testid="stAppViewContainer"] {
-        background-color: #E6EEF4; /* Gris perlado con un toque de azul */
+        background-image: linear-gradient(135deg, #011528, #002D62) !important;
+        background-attachment: fixed;
+        color: #FFFFFF;
         font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     }
 
-    /* --- CONTENEDOR PRINCIPAL (El "adentro" oscuro original) --- */
+    /* Reducir márgenes internos de Streamlit */
     .block-container {
-        background-image: linear-gradient(135deg, #011528, #002D62) !important;
-        border-radius: 20px;
-        padding: 2.5rem !important;
-        margin-top: 3vh;
-        margin-bottom: 3vh;
-        box-shadow: 0px 15px 40px rgba(0, 0, 0, 0.25);
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+        padding-left: 3rem !important;
+        padding-right: 3rem !important;
         max-width: 95% !important;
     }
 
-    /* --- RESPONSIVE DESIGN (Ajustes automáticos para celular) --- */
+    /* --- RESPONSIVE DESIGN (Ajustes para celular) --- */
     @media (max-width: 768px) {
         .block-container {
-            padding: 1rem !important; /* Menos relleno interno */
-            margin-top: 0 !important; /* Pegado al borde superior en móvil */
-            margin-bottom: 0 !important;
-            border-radius: 0px; /* Sin bordes redondeados en celular */
+            padding: 1rem !important;
             max-width: 100% !important;
         }
-        /* Ajustar tamaño de textos en móvil */
         h1 { font-size: 1.8rem !important; line-height: 1.2 !important; }
         h3 { font-size: 1.3rem !important; }
         .footer-container p { font-size: 0.85rem !important; }
@@ -60,19 +56,18 @@ st.markdown("""
         color: #FFFFFF !important;
     }
 
-    /* Resaltados con el Celeste/Cian UBO */
-    .ubo-cyan {
-        color: #00A4E4 !important;
+    /* Clase para iconos/detalles que antes eran celestes y ahora son blancos */
+    .ubo-white {
+        color: #FFFFFF !important;
     }
 
     /* --- CORRECCIÓN DEL LOGO --- */
-    /* Para que el logo de fondo blanco se vea como una tarjeta limpia */
     div[data-testid="column"]:nth-child(1) div[data-testid="stImage"] img {
         border: none !important;
         background-color: #FFFFFF !important;
         border-radius: 12px;
-        padding: 8px; /* Pequeño margen interno para que el logo respire */
-        box-shadow: 0px 4px 10px rgba(0,0,0,0.3) !important;
+        padding: 8px;
+        box-shadow: 0px 4px 15px rgba(255,255,255,0.1) !important;
         max-height: 100px;
         object-fit: contain;
     }
@@ -81,8 +76,8 @@ st.markdown("""
     div[data-testid="column"]:nth-child(n+2) div[data-testid="stImage"] img,
     div[data-testid="stImage"]:nth-child(n+2) img {
         border-radius: 8px;
-        box-shadow: 0px 8px 20px rgba(0,0,0,0.4);
-        border: 1px solid rgba(0, 164, 228, 0.3);
+        box-shadow: 0px 8px 20px rgba(0,0,0,0.5);
+        border: 1px solid rgba(255, 255, 255, 0.3); /* Borde blanco sutil */
         max-height: 60vh;
         object-fit: contain;
         margin: 0 auto;
@@ -93,33 +88,35 @@ st.markdown("""
         transform: scale(1.02);
     }
 
-    /* Estilo de las tarjetas de métricas */
+    /* --- TARJETAS DE MÉTRICAS (Estilo Cristal con acentos Blancos) --- */
     [data-testid="stMetric"] {
-        background-color: rgba(0, 30, 60, 0.6);
-        border: 1px solid rgba(0, 164, 228, 0.3);
-        border-left: 6px solid #00A4E4; 
+        background-color: rgba(0, 30, 60, 0.5); /* Azul profundo translúcido */
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-left: 6px solid #FFFFFF; /* Borde izquierdo BLANCO */
         padding: 15px;
         border-radius: 8px;
-        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3);
+        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.4);
         margin-bottom: 1rem;
         transition: transform 0.2s ease-in-out;
     }
     
     [data-testid="stMetric"]:hover {
         transform: translateY(-5px);
-        background-color: rgba(0, 40, 80, 0.8);
+        background-color: rgba(0, 40, 80, 0.7);
     }
     
     [data-testid="stMetricValue"] {
-        color: #00A4E4 !important; 
-        font-size: 2.5rem !important;
+        color: #FFFFFF !important; /* Valor en BLANCO */
+        font-size: 2.8rem !important;
         font-weight: 800;
-        text-shadow: 0px 0px 10px rgba(0, 164, 228, 0.4);
+        text-shadow: 0px 0px 10px rgba(255, 255, 255, 0.3);
     }
 
-    /* Barra de progreso personalizada */
+    /* Barra de progreso personalizada (Blanca) */
     .stProgress > div > div > div > div {
-        background-color: #00A4E4 !important;
+        background-color: #FFFFFF !important;
     }
 
     /* Pie de página (Footer) */
@@ -128,24 +125,24 @@ st.markdown("""
         padding: 20px;
         margin-top: 30px;
         background-color: transparent;
-        border-top: 1px solid rgba(0, 164, 228, 0.3);
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
     }
     .footer-container p {
         margin: 5px 0;
         font-size: 0.95rem;
-        color: #AAAAAA;
+        color: #CCCCCC;
     }
     
-    /* Insignias de estado (Badges) */
+    /* Insignias de estado (Badges Blancos) */
     .status-badge {
         display: inline-block;
         padding: 5px 12px;
         border-radius: 20px;
         font-size: 0.85rem;
         font-weight: bold;
-        background-color: rgba(0, 164, 228, 0.15);
-        color: #00A4E4;
-        border: 1px solid #00A4E4;
+        background-color: rgba(255, 255, 255, 0.1); /* Fondo blanco semitransparente */
+        color: #FFFFFF;
+        border: 1px solid #FFFFFF;
         margin-right: 10px;
         margin-bottom: 10px;
     }
@@ -164,11 +161,11 @@ with col_logo:
     if os.path.exists("logo_ubo.png"):
         st.image("logo_ubo.png")
     else:
-        st.markdown("<h1 style='text-align: center; color: #00A4E4; font-size: 3rem;'>UBO</h1>", unsafe_allow_html=True)
+        st.markdown("<h1 style='text-align: center; color: #FFFFFF; font-size: 3rem;'>UBO</h1>", unsafe_allow_html=True)
 
 with col_text:
     st.markdown("<h1 style='margin-bottom: 0px;'>Predicción de ocupación y gestión de estacionamientos</h1>", unsafe_allow_html=True)
-    st.markdown("<h4 style='color: #00A4E4; margin-top: 5px; margin-bottom: 15px;'>Gestión de Estacionamientos con Visión Computacional</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color: #DDDDDD; margin-top: 5px; margin-bottom: 15px;'>Gestión de Estacionamientos con Visión Computacional</h4>", unsafe_allow_html=True)
     
     # Badges de estado 
     st.markdown("""
@@ -186,7 +183,7 @@ imagenes = sorted([f for f in os.listdir(ruta_carpeta) if f.endswith('.jpg')])
 col_mapa, col_panel = st.columns([2.5, 1.2]) 
 
 with col_panel:
-    st.markdown("<h3><span class='ubo-cyan'>⚙️</span> Panel de Control</h3>", unsafe_allow_html=True)
+    st.markdown("<h3><span class='ubo-white'>⚙️</span> Panel de Control</h3>", unsafe_allow_html=True)
     selected_img_name = st.selectbox("Seleccione la fuente de entrada:", imagenes)
     
     # Procesamiento
@@ -205,7 +202,7 @@ with col_panel:
     # Porcentaje de ocupación
     pct_ocupacion = (ocupados / total) * 100 if total > 0 else 0
 
-    st.markdown("<br><h3><span class='ubo-cyan'>📊</span> Análisis del Recinto</h3>", unsafe_allow_html=True)
+    st.markdown("<br><h3><span class='ubo-white'>📊</span> Análisis del Recinto</h3>", unsafe_allow_html=True)
     st.metric("Libres (Disponibles)", libres)
     st.metric("Ocupados", ocupados)
     
@@ -214,20 +211,21 @@ with col_panel:
     st.progress(int(pct_ocupacion))
 
 with col_mapa:
-    st.markdown("<h3><span class='ubo-cyan'>🗺️</span> Mapeo de Detección</h3>", unsafe_allow_html=True)
+    st.markdown("<h3><span class='ubo-white'>🗺️</span> Mapeo de Detección</h3>", unsafe_allow_html=True)
     
     img_bgr = img.copy()
     for box in resultado.boxes:
         x1, y1, x2, y2 = map(int, box.xyxy[0])
         cls = int(box.cls[0])
-        color = (228, 164, 0) if cls == 0 else (50, 50, 255) 
+        # Blanco (255,255,255) para libres, Rojo intenso (50,50,255) para ocupados
+        color = (255, 255, 255) if cls == 0 else (50, 50, 255) 
         cv2.rectangle(img_bgr, (x1, y1), (x2, y2), color, 3) 
     
     st.image(cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB), use_container_width=True)
 
 # --- GALERÍA INFERIOR ---
 st.markdown("---")
-st.markdown("<h3><span class='ubo-cyan'>📂</span> Historial de Capturas</h3>", unsafe_allow_html=True)
+st.markdown("<h3><span class='ubo-white'>📂</span> Historial de Capturas</h3>", unsafe_allow_html=True)
 
 TAMANO_GALERIA = (300, 200) 
 n_cols = 5
@@ -241,7 +239,7 @@ for i, img_name in enumerate(imagenes[:5]):
 
 # --- VIDEO DE DEMOSTRACIÓN ---
 st.markdown("---")
-st.markdown("<h3><span class='ubo-cyan'>🎥</span> Inferencia en Video Continuo</h3>", unsafe_allow_html=True)
+st.markdown("<h3><span class='ubo-white'>🎥</span> Inferencia en Video Continuo</h3>", unsafe_allow_html=True)
 video_path = 'demo_video.mp4'
 if os.path.exists(video_path):
     v_col1, v_col2, v_col3 = st.columns([1, 3, 1])
@@ -255,6 +253,6 @@ st.markdown("""
 <div class="footer-container">
     <p style="font-weight: 600; color: #FFFFFF; font-size: 1.1rem; letter-spacing: 1px;">Predicción de ocupación y gestión de estacionamientos</p>
     <p>Universidad Bernardo O'Higgins - Facultad de Ingeniería</p>
-    <p style="color: #00A4E4; margin-top: 10px;">© 2026 Desarrollado por <b>Reichell Ardiaca</b> & <b>Sebastian Alvear</b></p>
+    <p style="color: #FFFFFF; margin-top: 10px;">© 2026 Desarrollado por <b>Reichell Ardiaca</b> & <b>Sebastian Alvear</b></p>
 </div>
 """, unsafe_allow_html=True)
