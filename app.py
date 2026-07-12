@@ -8,82 +8,81 @@ import numpy as np
 
 # --- CONFIGURACIÓN DE PÁGINA ---
 st.set_page_config(
-    page_title="Q-SOC Parking Demo",
+    page_title="Q-SOC Parking | UBO",
     page_icon="🚗",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
-# --- ESTILOS CSS AVANZADOS ---
+# --- ESTILOS CSS AVANZADOS Y MODERNOS ---
 st.markdown("""
 <style>
-    /* --- FUENTE Y FONDO GENERAL --- */
-    html, body, [class*="st-"] {
-        font-family: 'Segoe UI', 'Roboto', sans-serif;
-    }
-    /* Fondo principal con gradiente */
-    [data-testid="stAppViewContainer"] {
-        background-image: linear-gradient(120deg, #001f3f, #003366);
-        color: #FFFFFF;
-    }
-    /* Fondo de la barra lateral */
-    [data-testid="stSidebar"] {
-        background-color: rgba(0, 31, 63, 0.8);
-        border-right: 2px solid #F37321; /* Borde naranjo UBO */
+    /* Ocultar elementos predeterminados de Streamlit para un look más limpio */
+    #MainMenu {visibility: hidden;}
+    header {visibility: hidden;}
+    footer {visibility: hidden;}
+
+    /* Fondo general */
+    .stApp {
+        background-color: #F4F7F6;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    /* --- TÍTULOS Y TEXTOS --- */
-    h1, h2, h3 {
-        color: #FFFFFF; /* Títulos en blanco para contraste */
-    }
+    /* Títulos principales */
     h1 {
+        color: #002D62; /* Azul Institucional */
+        font-weight: 800;
+        margin-bottom: 0rem;
+    }
+    h2, h3 {
+        color: #004080;
+        font-weight: 600;
+    }
+
+    /* Estilo de las tarjetas de métricas */
+    [data-testid="stMetric"] {
+        background-color: #FFFFFF;
+        border-left: 6px solid #F37321; /* Naranjo UBO */
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease-in-out;
+    }
+    [data-testid="stMetric"]:hover {
+        transform: translateY(-5px);
+    }
+    [data-testid="stMetricValue"] {
+        color: #002D62;
+        font-size: 2.5rem;
+        font-weight: bold;
+    }
+
+    /* Contenedores de imágenes */
+    .stImage > img {
+        border-radius: 12px;
+        box-shadow: 0px 6px 15px rgba(0,0,0,0.1);
+        border: 2px solid #EAEAEA;
+    }
+
+    /* Pie de página (Footer) */
+    .footer-container {
         text-align: center;
+        padding: 25px;
+        margin-top: 50px;
+        background-color: #002D62;
+        color: #FFFFFF;
+        border-radius: 10px 10px 0 0;
+        box-shadow: 0px -4px 10px rgba(0,0,0,0.1);
+    }
+    .footer-container p {
+        margin: 5px 0;
+        font-size: 1rem;
+    }
+    .footer-logo {
+        color: #F37321;
         font-weight: bold;
-        text-shadow: 2px 2px 4px #000000;
+        font-size: 1.2rem;
     }
-    .st-emotion-cache-1g8m2i5, .st-emotion-cache-1kyxreq { /* Labels de métricas y texto general */
-        color: #DDDDDD;
-    }
-
-    /* --- TARJETAS DE MÉTRICAS --- */
-    .st-emotion-cache-1r4qj8v {
-        background-color: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 15px;
-        padding: 1.5rem;
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        backdrop-filter: blur(4px);
-        -webkit-backdrop-filter: blur(4px);
-        margin-bottom: 1rem;
-    }
-    /* Valor de la métrica */
-    .st-emotion-cache-1wivapv {
-        font-size: 2.5rem !important;
-        font-weight: bold;
-        color: #F37321; /* Naranjo UBO */
-    }
-
-    /* --- CONTENEDORES Y ELEMENTOS --- */
-    .st-emotion-cache-z5fcl4 { /* Contenedor principal de elementos */
-        border-radius: 15px;
-        padding: 2rem;
-        background-color: rgba(0, 0, 0, 0.2);
-    }
-    .stImage > img { /* Estilo para imágenes */
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.5);
-    }
-    .stVideo > video { /* Estilo para video */
-        border-radius: 10px;
-    }
-    /* Efecto hover en galería */
-    div[data-testid*="stImage"][style*="transform: scale(1);"] {
-        transition: transform 0.3s ease-in-out;
-    }
-    div[data-testid*="stImage"][style*="transform: scale(1);"]:hover {
-        transform: scale(1.05);
-    }
-
 </style>
 """, unsafe_allow_html=True)
 
@@ -91,92 +90,93 @@ st.markdown("""
 def load_model():
     return YOLO('best.pt')
 
-# --- CARGA DE MODELO ---
 modelo = load_model()
 
-# --- BARRA LATERAL (SIDEBAR) ---
-with st.sidebar:
-    # Logo UBO (reemplaza 'logo_ubo.png' si tienes el archivo localmente)
-    # Por ahora, usamos un placeholder de texto. Si tienes el logo, descomenta la línea de st.image
-    st.markdown("<h2 style='text-align: center; color: #F37321;'>UBO</h2>", unsafe_allow_html=True)
-    # st.image("ruta/a/tu/logo_ubo.png", use_column_width=True)
-    st.header("Panel de Control")
+# --- ENCABEZADO (HEADER) INSTITUCIONAL ---
+col_logo, col_text = st.columns([1, 6])
+with col_logo:
+    # Puedes cambiar el emoji por tu st.image("logo_ubo.png") si lo tienes
+    st.markdown("<h1 style='font-size: 4rem; text-align: center; color: #F37321;'>🎓</h1>", unsafe_allow_html=True)
+with col_text:
+    st.title("Sistema Inteligente de Estacionamientos (Q-SOC)")
+    st.markdown("**Proyecto de Visión Computacional - Universidad Bernardo O'Higgins**")
 
-    # Selector de imágenes
-    ruta_carpeta = 'ref_images'
-    imagenes = sorted([f for f in os.listdir(ruta_carpeta) if f.endswith('.jpg')])
-    selected_img_name = st.selectbox("Selecciona imagen a analizar:", imagenes, label_visibility="collapsed")
-    
-    st.image(Image.open(os.path.join(ruta_carpeta, selected_img_name)), use_column_width=True)
-
-    # Copyright
-    st.markdown("---")
-    st.markdown(
-        "<div style='text-align: center; font-size: 0.9rem;'>"
-        "© 2024 - Sistema Q-SOC<br>"
-        "Desarrollado por:<br>"
-        "<b>Reichell Ardiaca</b> & <b>Sebastian Alvear</b>"
-        "</div>",
-        unsafe_allow_html=True
-    )
-
-# --- TÍTULO PRINCIPAL ---
-st.title("Sistema Inteligente de Estacionamientos (Q-SOC)")
 st.markdown("---")
 
-# --- LÓGICA DE PREDICCIÓN ---
+# --- LÓGICA PREVIA ---
 ruta_carpeta = 'ref_images'
-selected_path = os.path.join(ruta_carpeta, selected_img_name)
-img = cv2.imread(selected_path)
-resultados = modelo.predict(source=img, imgsz=960, conf=0.25, verbose=False)
-resultado = resultados[0]
+imagenes = sorted([f for f in os.listdir(ruta_carpeta) if f.endswith('.jpg')])
 
-# Dibujo de bounding boxes en la imagen
-img_bgr = img.copy()
-for box in resultado.boxes:
-    x1, y1, x2, y2 = map(int, box.xyxy[0])
-    cls = int(box.cls[0])
-    color = (0, 255, 0) if cls == 0 else (50, 50, 255) # Verde para libre, Rojo para ocupado
-    cv2.rectangle(img_bgr, (x1, y1), (x2, y2), color, 3)
+# --- INTERFAZ PRINCIPAL (DISEÑO A DOS COLUMNAS) ---
+col_mapa, col_panel = st.columns([2.2, 1])
 
-# --- INTERFAZ PRINCIPAL ---
-col1, col2 = st.columns([2, 1])
+with col_panel:
+    st.markdown("### 🎛️ Panel de Control")
+    selected_img_name = st.selectbox("Seleccione la fuente de video/imagen:", imagenes)
+    
+    # Procesamiento
+    selected_path = os.path.join(ruta_carpeta, selected_img_name)
+    img = cv2.imread(selected_path)
+    resultados = modelo.predict(source=img, imgsz=960, conf=0.25, verbose=False)
+    resultado = resultados[0]
 
-with col1:
-    st.subheader("Visualización del Mapa")
-    st.image(cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB), use_column_width=True)
-
-with col2:
-    st.subheader("Estado del Estacionamiento")
+    # Cálculos
     detecciones = [modelo.names[int(box.cls[0])] for box in resultado.boxes]
     df = pd.Series(detecciones).value_counts()
-    
     libres = int(df.get("free_space", 0))
     ocupados = int(df.get("occupied_space", 0))
     total = libres + ocupados
 
+    st.markdown("<br>### 📊 Análisis en Tiempo Real", unsafe_allow_html=True)
     st.metric("✅ Espacios Libres", libres)
     st.metric("❌ Espacios Ocupados", ocupados)
-    st.metric("🅿️ Total de Espacios", total)
+    st.metric("🅿️ Total Capacidad", total)
 
-# --- GALERÍA INFERIOR ---
-with st.container():
-    st.markdown("---")
-    st.subheader("Dataset de Referencia")
+with col_mapa:
+    st.markdown("### 🗺️ Visualización de Ocupación")
+    # Dibujo de cajas limpio (sin texto)
+    img_bgr = img.copy()
+    for box in resultado.boxes:
+        x1, y1, x2, y2 = map(int, box.xyxy[0])
+        cls = int(box.cls[0])
+        color = (0, 255, 0) if cls == 0 else (50, 50, 255) # Verde libre, Rojo ocupado
+        cv2.rectangle(img_bgr, (x1, y1), (x2, y2), color, 4) # Grosor 4 para que se vea mejor
     
-    n_cols = 4 # Número de imágenes por fila
-    cols_galeria = st.columns(n_cols)
-    for i, img_name in enumerate(imagenes):
-        with cols_galeria[i % n_cols]:
-            st.image(os.path.join(ruta_carpeta, img_name), caption=img_name, use_column_width=True)
+    st.image(cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB), use_column_width=True)
 
-# --- VIDEO ---
-with st.container():
-    st.markdown("---")
-    st.subheader("Demostración de Procesamiento en Video")
-    
-    video_path = 'demo_video.mp4'
-    if os.path.exists(video_path):
+# --- GALERÍA INFERIOR UNIFORME ---
+st.markdown("---")
+st.markdown("### 📂 Dataset de Referencia")
+
+# Redimensionamiento estricto para que la galería no se vea deforme
+TAMANO_GALERIA = (400, 250) 
+n_cols = 4
+cols_galeria = st.columns(n_cols)
+
+for i, img_name in enumerate(imagenes):
+    ruta_img = os.path.join(ruta_carpeta, img_name)
+    # Abrimos, redimensionamos y mostramos para asegurar simetría total
+    img_pil = Image.open(ruta_img).resize(TAMANO_GALERIA)
+    with cols_galeria[i % n_cols]:
+        st.image(img_pil, caption=f"Muestra: {img_name}", use_column_width=True)
+
+# --- VIDEO DE DEMOSTRACIÓN ---
+st.markdown("---")
+st.markdown("### 🎥 Demostración de Procesamiento Continuo")
+video_path = 'demo_video.mp4'
+if os.path.exists(video_path):
+    # Centrar el video usando columnas
+    v_col1, v_col2, v_col3 = st.columns([1, 3, 1])
+    with v_col2:
         st.video(video_path)
-    else:
-        st.warning(f"El video '{video_path}' no se encuentra en la raíz del proyecto.")
+else:
+    st.warning(f"El video '{video_path}' no se encuentra en el repositorio.")
+
+# --- FOOTER (DERECHOS DE AUTOR) ---
+st.markdown("""
+<div class="footer-container">
+    <span class="footer-logo">Sistema Q-SOC</span>
+    <p>Proyecto de Tesis - Arquitectura y Visión Computacional</p>
+    <p>© 2026 Desarrollado por <b>Reichell Ardiaca</b> & <b>Sebastian Alvear</b></p>
+</div>
+""", unsafe_allow_html=True)
