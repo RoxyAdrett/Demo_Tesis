@@ -27,9 +27,9 @@ st.markdown("""
     [data-testid="stAppViewContainer"] {
         background-color: #011528;
         background-image: 
-            radial-gradient(rgba(255, 255, 255, 0.15) 2px, transparent 2px),
+            radial-gradient(rgba(255, 255, 255, 0.15) 2px, transparent 2px), /* Puntos celestes sutiles */
             linear-gradient(135deg, #011528, #002D62) !important;
-        background-size: 40px 40px, 100% 100%;
+        background-size: 40px 40px, 100% 100%; /* Tamaño de la cuadrícula de puntos */
         background-attachment: fixed;
         color: #FFFFFF;
         font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -41,20 +41,21 @@ st.markdown("""
         padding-bottom: 2.5rem !important;
         padding-left: 3.5rem !important;
         padding-right: 3.5rem !important;
-        max-width: 92% !important;
+        max-width: 92% !important; /* Deja espacio a los lados para lucir el fondo */
         margin-top: 3vh;
         margin-bottom: 3vh;
-        background: rgba(0, 18, 40, 0.75);
+        background: rgba(0, 18, 40, 0.75); /* Fondo interno un poco más oscuro y sólido */
         backdrop-filter: blur(15px);
         -webkit-backdrop-filter: blur(15px);
         border-radius: 20px;
+        /* Líneas laterales iluminadas para demarcar el área */
         border-left: 3px solid #FFFFFF; 
         border-right: 3px solid #FFFFFF; 
         border-top: 1px solid rgba(255,255,255,0.1);
         border-bottom: 1px solid rgba(255,255,255,0.1);
         box-shadow: 
-            0px 20px 50px rgba(0,0,0,0.7),
-            inset 0px 0px 30px rgba(0, 164, 228, 0.05);
+            0px 20px 50px rgba(0,0,0,0.7), /* Sombra exterior profunda */
+            inset 0px 0px 30px rgba(0, 164, 228, 0.05); /* Brillo interior sutil celeste */
     }
 
     /* --- RESPONSIVE DESIGN (Ajustes para celular) --- */
@@ -77,55 +78,42 @@ st.markdown("""
         color: #FFFFFF !important;
     }
 
+    /* Clase para iconos/detalles en blanco */
     .ubo-white {
         color: #FFFFFF !important;
     }
 
-    /* =========================================================
-       CSS CORREGIDO DE IMÁGENES:
-       ========================================================= */
+    /* --- CORRECCIÓN DEL LOGO --- */
+    div[data-testid="column"]:nth-child(1) div[data-testid="stImage"] img {
+        border: none !important;
+        background-color: #FFFFFF !important;
+        border-radius: 12px;
+        padding: 8px;
+        box-shadow: 0px 4px 15px rgba(255,255,255,0.1) !important;
+        max-height: 100px;
+        object-fit: contain;
+    }
 
-    /* 1. BASE PARA TODAS LAS IMÁGENES (Aplica a Galería y Mapa) */
-    div[data-testid="stImage"] img {
+    /* --- TAMAÑO DE LAS IMÁGENES PRINCIPALES Y ANIMACIÓN --- */
+    div[data-testid="column"]:nth-child(n+2) div[data-testid="stImage"] img,
+    div[data-testid="stImage"]:nth-child(n+2) img {
         border-radius: 8px;
         box-shadow: 0px 8px 20px rgba(0,0,0,0.5);
         border: 1px solid rgba(255, 255, 255, 0.3);
-        width: 100% !important; /* Que ocupe el ancho completo real */
+        max-height: 60vh;
+        object-fit: contain;
+        margin: 0 auto;
         transition: transform 0.3s ease-in-out !important;
     }
-    /* Animación por defecto (aplica a la Galería) */
-    div[data-testid="stImage"] img:hover {
-        transform: scale(1.01) !important;
+    
+    div[data-testid="column"]:nth-child(n+2) div[data-testid="stImage"] img:hover,
+    div[data-testid="stImage"]:nth-child(n+2) img:hover {
+        transform: scale(1.01) !important; /* Zoom en imágenes */
     }
-
-    /* 2. MAPA PRINCIPAL (El segundo bloque horizontal) */
-    div[data-testid="stHorizontalBlock"]:nth-of-type(2) div[data-testid="stImage"] img {
-        transform: scale(1) !important; /* Fija el tamaño */
-        max-height: none !important; /* QUITA LA RESTRICCIÓN QUE LA HACÍA PEQUEÑA */
-    }
-    div[data-testid="stHorizontalBlock"]:nth-of-type(2) div[data-testid="stImage"] img:hover {
-        transform: scale(1) !important; /* ANULA LA ANIMACIÓN PARA QUITAR EL LAG */
-    }
-
-    /* 3. LOGO (El primer bloque horizontal) */
-    div[data-testid="stHorizontalBlock"]:nth-of-type(1) div[data-testid="stImage"] img {
-        border: none !important;
-        background-color: transparent !important; /* SIN FONDO BLANCO RARO */
-        box-shadow: none !important;
-        padding: 0 !important;
-        max-height: 100px !important;
-        width: auto !important;
-        transform: scale(1) !important;
-    }
-    div[data-testid="stHorizontalBlock"]:nth-of-type(1) div[data-testid="stImage"] img:hover {
-        transform: scale(1) !important; /* Sin animación en el logo */
-    }
-
-    /* ========================================================= */
 
     /* --- TARJETAS DE MÉTRICAS (Estilo Cristal y Animación Unificada) --- */
     [data-testid="stMetric"] {
-        background-color: rgba(255, 255, 255, 0.05);
+        background-color: rgba(255, 255, 255, 0.05); /* Cristal sutil */
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.15);
@@ -134,10 +122,12 @@ st.markdown("""
         border-radius: 8px;
         box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3);
         margin-bottom: 1rem;
+        /* Transición fluida para el efecto de zoom */
         transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background-color 0.3s ease-in-out !important;
     }
     
     [data-testid="stMetric"]:hover {
+        /* Misma animación de zoom que las imágenes */
         transform: scale(1.01) !important; 
         background-color: rgba(255, 255, 255, 0.1) !important;
         box-shadow: 0px 12px 25px rgba(0, 0, 0, 0.6) !important;
