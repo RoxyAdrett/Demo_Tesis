@@ -42,13 +42,11 @@ for box in resultado.boxes:
 col1, col2 = st.columns([2, 1])
 
 with col1:
-    st.subheader("Visualización en Tiempo Real")
-    # Asegúrate de que el archivo esté en la carpeta raíz
-    video_file = open('demo_video.mp4', 'rb')
-    video_bytes = video_file.read()
-    st.video(video_bytes)
+    st.subheader("Visualización del Mapa")
+    st.image(cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB), use_column_width=True)
 
 with col2:
+    st.divider()
     # 1. Selector en orden ascendente arriba del título
     ruta_carpeta = 'ref_images'
     # Usamos sorted() para asegurar orden ascendente
@@ -75,3 +73,16 @@ cols_ref = st.columns(len(imagenes))
 for i, img_name in enumerate(imagenes):
     ruta = os.path.join(ruta_carpeta, img_name)
     cols_ref[i].image(Image.open(ruta).resize((300, 200)), use_column_width=True, caption=img_name)
+
+st.divider()
+st.subheader("Demostración de Procesamiento en Video")
+st.markdown("Video procesado mediante el modelo YOLOv11 en tiempo real:")
+
+# Asegúrate de que el archivo 'demo_video.mp4' esté en la carpeta raíz
+# Si es muy pesado, recuerda usar el enlace de YouTube como te sugerí
+if os.path.exists('demo_video.mp4'):
+    video_file = open('demo_video.mp4', 'rb')
+    video_bytes = video_file.read()
+    st.video(video_bytes)
+else:
+    st.warning("El video de demostración no se encuentra en el repositorio.")
