@@ -27,7 +27,7 @@ st.markdown("""
     [data-testid="stAppViewContainer"] {
         background-color: #011528;
         background-image: 
-            radial-gradient(rgba(0, 164, 228, 0.15) 2px, transparent 2px), /* Puntos celestes sutiles */
+            radial-gradient(rgba(255, 255, 255, 0.15) 2px, transparent 2px), /* Puntos celestes sutiles */
             linear-gradient(135deg, #011528, #002D62) !important;
         background-size: 40px 40px, 100% 100%; /* Tamaño de la cuadrícula de puntos */
         background-attachment: fixed;
@@ -65,8 +65,8 @@ st.markdown("""
             max-width: 98% !important;
             margin-top: 1vh;
             border-radius: 12px;
-            border-left: 2px solid #00A4E4; 
-            border-right: 2px solid #00A4E4; 
+            border-left: 2px solid #FFFFFF; 
+            border-right: 2px solid #FFFFFF; 
         }
         h1 { font-size: 1.8rem !important; line-height: 1.2 !important; }
         h3 { font-size: 1.3rem !important; }
