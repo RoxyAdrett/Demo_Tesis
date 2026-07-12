@@ -4,6 +4,7 @@ import pandas as pd
 from ultralytics import YOLO
 from pathlib import Path
 from PIL import Image
+import os
 
 # Configuración de página
 st.set_page_config(layout="wide", page_title="Q-SOC Parking Demo")
@@ -31,28 +32,19 @@ with col1:
     st.subheader("Visualización del Mapa")
     # Mostrar la imagen con las cajas de Ultralytics (o puedes dibujar las tuyas encima)
     st.image(resultado.plot(), channels="BGR", use_column_width=True)
+# ... (código anterior igual)
 
-with col2:
-    st.subheader("Estado del Recinto")
-    
-    # Tu lógica de conteo
-    detecciones = []
-    for box in resultado.boxes:
-        detecciones.append(modelo.names[int(box.cls[0])])
-    
-    df = pd.Series(detecciones).value_counts()
-    free_count = int(df.get("free_space", 0))
-    occupied_count = int(df.get("occupied_space", 0))
-    
-    # Tarjetas visuales
-    st.metric("Espacios Libres", free_count)
-    st.metric("Espacios Ocupados", occupied_count)
-    
-    # Iconos visuales (estilo panel de control)
-    st.write("---")
-    st.markdown("### Mapa de Estado")
-    status_cols = st.columns(min(len(resultado.boxes), 5))
-    for i, box in enumerate(resultado.boxes):
-        if i < 5: # Limitamos a 5 iconos para que no se desborde
-            label = "🔴" if int(box.cls[0]) == 1 else "🟢"
-            status_cols[i].markdown(f"{label} Espacio {i+1}")
+st.divider()
+st.subheader("Dataset de Referencia (Imágenes Originales)")
+
+# Buscamos todas las imágenes en la carpeta 'ref_images'
+ruta_carpeta = 'ref_images'
+imagenes_en_carpeta = [f for f in os.listdir(ruta_carpeta) if f.endswith('.jpg')]
+
+# Creamos las columnas dinámicamente según la cantidad de imágenes
+cols_ref = st.columns(len(imagenes_en_carpeta))
+
+for i, img_name in enumerate(imagenes_en_carpeta):
+    # Esto agrega cada imagen encontrada automáticamente
+    ruta_completa = os.path.join(ruta_carpeta, img_name)
+    cols_ref[i].image(ruta_completa, use_column_width=True, caption=img_name)
