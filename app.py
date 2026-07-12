@@ -44,19 +44,27 @@ with col1:
 
 with col2:
     st.subheader("Estado del Recinto")
-    detecciones = [modelo.names[int(box.cls[0])] for box in resultado.boxes]
-    df = pd.Series(detecciones).value_counts()
-    
-    st.metric("Espacios Libres", int(df.get("free_space", 0)))
-    st.metric("Espacios Ocupados", int(df.get("occupied_space", 0)))
+    with st.container():
+        detecciones = [modelo.names[int(box.cls[0])] for box in resultado.boxes]
+        df = pd.Series(detecciones).value_counts()
+        
+        libres = int(df.get("free_space", 0))
+        ocupados = int(df.get("occupied_space", 0))
+        total = libres + ocupados
+
+        st.metric("✅ Espacios Libres", libres)
+        st.metric("❌ Espacios Ocupados", ocupados)
+        st.metric("🅿️ Total de Espacios", total)
 
 # --- GALERÍA INFERIOR ---
 st.divider()
 st.subheader("Dataset de Referencia")
-cols_ref = st.columns(len(imagenes))
+
+n_cols = 4 # Número de imágenes por fila en la galería
+cols_galeria = st.columns(n_cols)
 for i, img_name in enumerate(imagenes):
-    ruta = os.path.join(ruta_carpeta, img_name)
-    cols_ref[i].image(Image.open(ruta).resize((300, 200)), use_column_width=True, caption=img_name)
+    with cols_galeria[i % n_cols]:
+        st.image(os.path.join(ruta_carpeta, img_name), caption=img_name, use_column_width=True)
 
 # --- VIDEO ---
 st.divider()
