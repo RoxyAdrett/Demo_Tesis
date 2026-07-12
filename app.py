@@ -16,36 +16,26 @@ def load_model():
 
 modelo = load_model()
 
+# --- SELECTOR GLOBAL (Arriba de todo) ---
+ruta_carpeta = 'ref_images'
+imagenes = sorted([f for f in os.listdir(ruta_carpeta) if f.endswith('.jpg')])
+selected_img_name = st.selectbox("Entrada de Datos: Selecciona imagen a analizar:", imagenes)
+selected_path = os.path.join(ruta_carpeta, selected_img_name)
+
 # --- PREDICCIÓN ---
 img = cv2.imread(selected_path)
 resultados = modelo.predict(source=img, imgsz=960, conf=0.25, verbose=False)
 resultado = resultados[0]
 
-# --- DIBUJO MANUAL (Sin etiquetas de texto) ---
+# --- DIBUJO MANUAL ---
 img_bgr = img.copy()
 for box in resultado.boxes:
     x1, y1, x2, y2 = map(int, box.xyxy[0])
     cls = int(box.cls[0])
-    # Verde para libres (0), Rojo para ocupados (1)
-    color = (0, 255, 0) if cls == 0 else (0, 0, 255)
+    color = (0, 255, 0) if cls == 0 else (0, 0, 255) # Verde libre, Rojo ocupado
     cv2.rectangle(img_bgr, (x1, y1), (x2, y2), color, 3)
 
 # --- INTERFAZ PRINCIPAL ---
-# 1. Definir la carpeta
-    ruta_carpeta = 'ref_images'
-    
-    # 2. Obtener solo los nombres de los archivos para mostrar en el selectbox
-    nombres_imagenes = sorted([f for f in os.listdir(ruta_carpeta) if f.endswith('.jpg')])
-    
-    # 3. Crear el selector
-    selected_img_name = st.selectbox("Entrada de Datos\n\nSelecciona imagen a analizar:", nombres_imagenes)
-    
-    # 4. CRUCIAL: Crear la ruta completa para que el modelo la encuentre
-    selected_path = os.path.join(ruta_carpeta, selected_img_name)
-    
-    # 5. Usar esa ruta completa en el modelo
-    img = cv2.imread(selected_path)
-    resultados = modelo.predict(source=img, imgsz=960, conf=0.25, verbose=False)
 col1, col2 = st.columns([2, 1])
 
 with col1:
@@ -53,12 +43,6 @@ with col1:
     st.image(cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB), use_column_width=True)
 
 with col2:
-    
-    # Recalculamos la predicción con la imagen seleccionada aquí
-    img = cv2.imread(selected_path)
-    resultados = modelo.predict(source=img, imgsz=960, conf=0.25, verbose=False)
-    resultado = resultados[0]
-
     st.subheader("Estado del Recinto")
     detecciones = [modelo.names[int(box.cls[0])] for box in resultado.boxes]
     df = pd.Series(detecciones).value_counts()
@@ -74,15 +58,10 @@ for i, img_name in enumerate(imagenes):
     ruta = os.path.join(ruta_carpeta, img_name)
     cols_ref[i].image(Image.open(ruta).resize((300, 200)), use_column_width=True, caption=img_name)
 
+# --- VIDEO ---
 st.divider()
 st.subheader("Demostración de Procesamiento en Video")
-st.markdown("Video procesado mediante el modelo YOLOv11 en tiempo real:")
-
-# Asegúrate de que el archivo 'demo_video.mp4' esté en la carpeta raíz
-# Si es muy pesado, recuerda usar el enlace de YouTube como te sugerí
 if os.path.exists('demo_video.mp4'):
-    video_file = open('demo_video.mp4', 'rb')
-    video_bytes = video_file.read()
-    st.video(video_bytes)
+    st.video('demo_video.mp4')
 else:
-    st.warning("El video de demostración no se encuentra en el repositorio.")
+    st.warning("El video 'demo_video.mp4' no se encuentra en la raíz del repositorio.")
