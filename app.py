@@ -14,7 +14,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- ESTILOS CSS (FONDO AZUL + ACENTOS BLANCOS + BARRA BLANCA) ---
+# --- ESTILOS CSS (DISEÑO TECNOLÓGICO CON TRAMA Y PANEL FLOTANTE) ---
 st.markdown("""
 <style>
     /* Ocultar barra lateral y menús predeterminados */
@@ -23,28 +23,50 @@ st.markdown("""
     header {visibility: hidden;}
     footer {visibility: hidden;}
 
-    /* --- FONDO GENERAL (Gradiente Azul Marino UBO) --- */
+    /* --- FONDO GENERAL (Gradiente Azul Marino + Trama de Puntos AI) --- */
     [data-testid="stAppViewContainer"] {
-        background-image: linear-gradient(135deg, #011528, #002D62) !important;
+        background-color: #011528;
+        background-image: 
+            radial-gradient(rgba(0, 164, 228, 0.15) 2px, transparent 2px), /* Puntos celestes sutiles */
+            linear-gradient(135deg, #011528, #002D62) !important;
+        background-size: 40px 40px, 100% 100%; /* Tamaño de la cuadrícula de puntos */
         background-attachment: fixed;
         color: #FFFFFF;
         font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     }
 
-    /* Reducir márgenes internos de Streamlit */
+    /* --- MARCO CENTRAL FLOTANTE (Separa el contenido del fondo) --- */
     .block-container {
-        padding-top: 2rem !important;
-        padding-bottom: 2rem !important;
-        padding-left: 3rem !important;
-        padding-right: 3rem !important;
-        max-width: 95% !important;
+        padding-top: 2.5rem !important;
+        padding-bottom: 2.5rem !important;
+        padding-left: 3.5rem !important;
+        padding-right: 3.5rem !important;
+        max-width: 92% !important; /* Deja espacio a los lados para lucir el fondo */
+        margin-top: 3vh;
+        margin-bottom: 3vh;
+        background: rgba(0, 18, 40, 0.75); /* Fondo interno un poco más oscuro y sólido */
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border-radius: 20px;
+        /* Líneas laterales iluminadas para demarcar el área */
+        border-left: 3px solid #00A4E4; 
+        border-right: 3px solid #00A4E4; 
+        border-top: 1px solid rgba(255,255,255,0.1);
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 
+            0px 20px 50px rgba(0,0,0,0.7), /* Sombra exterior profunda */
+            inset 0px 0px 30px rgba(0, 164, 228, 0.05); /* Brillo interior sutil celeste */
     }
 
     /* --- RESPONSIVE DESIGN (Ajustes para celular) --- */
     @media (max-width: 768px) {
         .block-container {
-            padding: 1rem !important;
-            max-width: 100% !important;
+            padding: 1.5rem !important;
+            max-width: 98% !important;
+            margin-top: 1vh;
+            border-radius: 12px;
+            border-left: 2px solid #00A4E4; 
+            border-right: 2px solid #00A4E4; 
         }
         h1 { font-size: 1.8rem !important; line-height: 1.2 !important; }
         h3 { font-size: 1.3rem !important; }
@@ -88,23 +110,23 @@ st.markdown("""
         transform: scale(1.02);
     }
 
-    /* --- TARJETAS DE MÉTRICAS (Estilo Cristal con acentos Blancos) --- */
+    /* --- TARJETAS DE MÉTRICAS (Estilo Cristal) --- */
     [data-testid="stMetric"] {
-        background-color: rgba(0, 30, 60, 0.5);
+        background-color: rgba(255, 255, 255, 0.05); /* Cristal sutil */
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.15);
         border-left: 6px solid #FFFFFF;
         padding: 15px;
         border-radius: 8px;
-        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.4);
+        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3);
         margin-bottom: 1rem;
-        transition: transform 0.2s ease-in-out;
+        transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
     }
     
     [data-testid="stMetric"]:hover {
         transform: translateY(-5px);
-        background-color: rgba(0, 40, 80, 0.7);
+        background-color: rgba(255, 255, 255, 0.1);
     }
     
     [data-testid="stMetricValue"] {
@@ -114,7 +136,7 @@ st.markdown("""
         text-shadow: 0px 0px 10px rgba(255, 255, 255, 0.3);
     }
 
-    /* --- BARRA DE PROGRESO (Reforzada a Blanco Puro) --- */
+    /* --- BARRA DE PROGRESO (Blanco Puro) --- */
     [data-testid="stProgress"] > div > div > div {
         background-color: #FFFFFF !important;
     }
