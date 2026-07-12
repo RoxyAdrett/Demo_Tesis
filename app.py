@@ -14,54 +14,67 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- ESTILOS CSS AVANZADOS Y MODERNOS ---
+# --- ESTILOS CSS AVANZADOS (MODO OSCURO / NEÓN) ---
 st.markdown("""
 <style>
-    /* Ocultar elementos predeterminados de Streamlit para un look más limpio */
+    /* Ocultar elementos predeterminados de Streamlit */
     #MainMenu {visibility: hidden;}
     header {visibility: hidden;}
     footer {visibility: hidden;}
 
-    /* Fondo general */
-    .stApp {
-        background-color: #F4F7F6;
+    /* Fondo general oscuro con gradiente azul UBO */
+    [data-testid="stAppViewContainer"] {
+        background-image: linear-gradient(135deg, #021124, #002D62);
+        color: #FFFFFF;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    /* Forzar color de texto blanco en la mayoría de elementos */
+    .stMarkdown p, .stText, h1, h2, h3, h4, h5, h6, label {
+        color: #FFFFFF !important;
     }
 
     /* Títulos principales */
     h1 {
-        color: #002D62; /* Azul Institucional */
         font-weight: 800;
         margin-bottom: 0rem;
+        text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
     }
     h2, h3 {
-        color: #004080;
         font-weight: 600;
+        color: #EAEAEA !important;
     }
 
-    /* Estilo de las tarjetas de métricas */
+    /* Estilo de las tarjetas de métricas (Efecto Cristal) */
     [data-testid="stMetric"] {
-        background-color: #FFFFFF;
+        background-color: rgba(255, 255, 255, 0.05); /* Transparente */
+        backdrop-filter: blur(10px); /* Efecto vidrio borroso */
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         border-left: 6px solid #F37321; /* Naranjo UBO */
         padding: 20px;
         border-radius: 10px;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
+        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3);
         transition: transform 0.2s ease-in-out;
     }
     [data-testid="stMetric"]:hover {
         transform: translateY(-5px);
+        background-color: rgba(255, 255, 255, 0.1);
     }
+    
+    /* Valor numérico de la métrica */
     [data-testid="stMetricValue"] {
-        color: #002D62;
-        font-size: 2.5rem;
+        color: #F37321 !important; /* Naranjo resplandeciente */
+        font-size: 2.8rem !important;
         font-weight: bold;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
     }
 
     /* Contenedores de imágenes */
     .stImage > img {
         border-radius: 12px;
-        box-shadow: 0px 6px 15px rgba(0,0,0,0.1);
-        border: 2px solid #EAEAEA;
+        box-shadow: 0px 8px 20px rgba(0,0,0,0.6);
+        border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     /* Pie de página (Footer) */
@@ -69,19 +82,21 @@ st.markdown("""
         text-align: center;
         padding: 25px;
         margin-top: 50px;
-        background-color: #002D62;
-        color: #FFFFFF;
+        background-color: rgba(0, 0, 0, 0.3);
+        color: #AAAAAA;
         border-radius: 10px 10px 0 0;
-        box-shadow: 0px -4px 10px rgba(0,0,0,0.1);
+        border-top: 2px solid #F37321;
+        box-shadow: 0px -4px 10px rgba(0,0,0,0.2);
     }
     .footer-container p {
         margin: 5px 0;
         font-size: 1rem;
     }
     .footer-logo {
-        color: #F37321;
+        color: #FFFFFF;
         font-weight: bold;
         font-size: 1.2rem;
+        letter-spacing: 1px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -95,8 +110,7 @@ modelo = load_model()
 # --- ENCABEZADO (HEADER) INSTITUCIONAL ---
 col_logo, col_text = st.columns([1, 6])
 with col_logo:
-    # Puedes cambiar el emoji por tu st.image("logo_ubo.png") si lo tienes
-    st.markdown("<h1 style='font-size: 4rem; text-align: center; color: #F37321;'>🎓</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='font-size: 4.5rem; text-align: center; color: #F37321;'>🎓</h1>", unsafe_allow_html=True)
 with col_text:
     st.title("Sistema Inteligente de Estacionamientos (Q-SOC)")
     st.markdown("**Proyecto de Visión Computacional - Universidad Bernardo O'Higgins**")
@@ -175,8 +189,8 @@ else:
 # --- FOOTER (DERECHOS DE AUTOR) ---
 st.markdown("""
 <div class="footer-container">
-    <span class="footer-logo">Sistema Q-SOC</span>
-    <p>Proyecto de Tesis - Arquitectura y Visión Computacional</p>
-    <p>© 2026 Desarrollado por <b>Reichell Ardiaca</b> & <b>Sebastian Alvear</b></p>
+    <span class="footer-logo">SISTEMA Q-SOC</span>
+    <p style="color: #EAEAEA;">Proyecto de Tesis - Arquitectura y Visión Computacional</p>
+    <p style="color: #F37321; margin-top: 10px;">© 2026 Desarrollado por <b>Reichell Ardiaca</b> & <b>Sebastian Alvear</b></p>
 </div>
 """, unsafe_allow_html=True)
