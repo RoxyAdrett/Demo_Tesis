@@ -41,9 +41,6 @@ with col2:
     detecciones = [modelo.names[int(box.cls[0])] for box in resultado.boxes]
     df = pd.Series(detecciones).value_counts()
     
-    st.metric("Espacios Libres", int(df.get("free_space", 0)))
-    st.metric("Espacios Ocupados", int(df.get("occupied_space", 0)))
-    
     st.write("---")
     st.markdown("### Detalles Rápidos")
     st.info(f"Archivo analizado: {selected_img_name}")
