@@ -14,7 +14,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- ESTILOS CSS (IDENTIDAD UBO + PROPORCIONES CORREGIDAS) ---
+# --- ESTILOS CSS (IDENTIDAD UBO + PROPORCIONES CORREGIDAS + ANIMACIONES) ---
 st.markdown("""
 <style>
     /* Ocultar barra lateral y menús predeterminados */
@@ -22,6 +22,15 @@ st.markdown("""
     #MainMenu {visibility: hidden;}
     header {visibility: hidden;}
     footer {visibility: hidden;}
+
+    /* --- CORRECCIÓN: REDUCIR MÁRGENES GIGANTES DE STREAMLIT --- */
+    .block-container {
+        padding-top: 2rem !important;
+        padding-bottom: 0rem !important;
+        padding-left: 2rem !important;
+        padding-right: 2rem !important;
+        max-width: 98% !important;
+    }
 
     /* Fondo general oscuro con gradiente Azul Marino UBO */
     [data-testid="stAppViewContainer"] {
@@ -40,7 +49,7 @@ st.markdown("""
         color: #00A4E4 !important;
     }
 
-    /* --- CORRECCIÓN: TAMAÑO DE LA IMAGEN PRINCIPAL --- */
+    /* --- TAMAÑO DE LA IMAGEN PRINCIPAL Y ANIMACIÓN --- */
     div[data-testid="stImage"] img {
         border-radius: 8px;
         box-shadow: 0px 8px 20px rgba(0,0,0,0.4);
@@ -48,6 +57,11 @@ st.markdown("""
         max-height: 60vh; /* Límite de altura a la proporción de la pantalla */
         object-fit: contain; /* Evita que se deforme */
         margin: 0 auto; /* Centra la imagen */
+        transition: transform 0.3s ease-in-out; /* Animación recuperada */
+    }
+    
+    div[data-testid="stImage"] img:hover {
+        transform: scale(1.02); /* Animación recuperada */
     }
 
     /* Estilo de las tarjetas de métricas */
@@ -61,6 +75,11 @@ st.markdown("""
         border-radius: 8px;
         box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.4);
         margin-bottom: 1rem;
+        transition: transform 0.2s ease-in-out; /* Animación recuperada */
+    }
+    
+    [data-testid="stMetric"]:hover {
+        transform: translateY(-5px); /* Animación recuperada */
     }
     
     /* Valor numérico de la métrica */
@@ -76,11 +95,12 @@ st.markdown("""
         background-color: #00A4E4 !important;
     }
 
-    /* Pie de página (Footer) - Acoplado correctamente */
+    /* Pie de página (Footer) - Acoplado correctamente y sin margen inferior */
     .footer-container {
         text-align: center;
         padding: 20px;
         margin-top: 30px;
+        margin-bottom: 0px;
         background-color: rgba(0, 15, 35, 0.8);
         border-top: 3px solid #00A4E4;
         border-radius: 12px 12px 0 0;
@@ -122,7 +142,7 @@ with col_logo:
         st.markdown("<h1 style='text-align: center; color: #00A4E4; font-size: 3rem;'>UBO</h1>", unsafe_allow_html=True)
 
 with col_text:
-    st.markdown("<h1 style='margin-bottom: 0px;'>Sistema Inteligente Q-SOC</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='margin-bottom: 0px;'>Predicción de ocupación y gestión de estacionamientos</h1>", unsafe_allow_html=True)
     st.markdown("<h4 style='color: #00A4E4; margin-top: 0px;'>Gestión de Estacionamientos con Visión Computacional</h4>", unsafe_allow_html=True)
     
     # Badges de estado 
@@ -138,10 +158,11 @@ ruta_carpeta = 'ref_images'
 imagenes = sorted([f for f in os.listdir(ruta_carpeta) if f.endswith('.jpg')])
 
 # --- INTERFAZ PRINCIPAL (DISEÑO A DOS COLUMNAS) ---
-col_mapa, col_panel = st.columns([2.5, 1.2]) # Ajusté la proporción para que el mapa no se estire tanto
+col_mapa, col_panel = st.columns([2.5, 1.2]) 
 
 with col_panel:
-    st.markdown("### <span class='ubo-cyan'>⚙️</span> Panel de Control", unsafe_allow_html=True)
+    # Corrección de título para evitar el bug de ###
+    st.markdown("<h3><span class='ubo-cyan'>⚙️</span> Panel de Control</h3>", unsafe_allow_html=True)
     selected_img_name = st.selectbox("Seleccione la fuente de entrada:", imagenes)
     
     # Procesamiento
@@ -160,35 +181,38 @@ with col_panel:
     # Porcentaje de ocupación
     pct_ocupacion = (ocupados / total) * 100 if total > 0 else 0
 
-    st.markdown("<br>### <span class='ubo-cyan'>📊</span> Análisis del Recinto", unsafe_allow_html=True)
+    # Corrección de título
+    st.markdown("<br><h3><span class='ubo-cyan'>📊</span> Análisis del Recinto</h3>", unsafe_allow_html=True)
     st.metric("Libres (Disponibles)", libres)
     st.metric("Ocupados", ocupados)
     
-    # Barra de Ocupación restaurada
+    # Barra de Ocupación
     st.markdown(f"**Nivel de Ocupación: {pct_ocupacion:.1f}%**")
     st.progress(int(pct_ocupacion))
 
 with col_mapa:
-    st.markdown("### <span class='ubo-cyan'>🗺️</span> Mapeo de Detección", unsafe_allow_html=True)
+    # Corrección de título
+    st.markdown("<h3><span class='ubo-cyan'>🗺️</span> Mapeo de Detección</h3>", unsafe_allow_html=True)
     
     img_bgr = img.copy()
     for box in resultado.boxes:
         x1, y1, x2, y2 = map(int, box.xyxy[0])
         cls = int(box.cls[0])
-        color = (228, 164, 0) if cls == 0 else (50, 50, 255) # Celeste UBO libre, Rojo ocupado
+        color = (228, 164, 0) if cls == 0 else (50, 50, 255) 
         cv2.rectangle(img_bgr, (x1, y1), (x2, y2), color, 3) 
     
     st.image(cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB), use_container_width=True)
 
 # --- GALERÍA INFERIOR ---
 st.markdown("---")
-st.markdown("### <span class='ubo-cyan'>📂</span> Historial de Capturas", unsafe_allow_html=True)
+# Corrección de título
+st.markdown("<h3><span class='ubo-cyan'>📂</span> Historial de Capturas</h3>", unsafe_allow_html=True)
 
 TAMANO_GALERIA = (300, 200) 
 n_cols = 5
 cols_galeria = st.columns(n_cols)
 
-for i, img_name in enumerate(imagenes[:5]): # Limitado a 5 para no saturar
+for i, img_name in enumerate(imagenes[:5]): 
     ruta_img = os.path.join(ruta_carpeta, img_name)
     img_pil = Image.open(ruta_img).resize(TAMANO_GALERIA)
     with cols_galeria[i]:
@@ -196,7 +220,8 @@ for i, img_name in enumerate(imagenes[:5]): # Limitado a 5 para no saturar
 
 # --- VIDEO DE DEMOSTRACIÓN ---
 st.markdown("---")
-st.markdown("### <span class='ubo-cyan'>🎥</span> Inferencia en Video Continuo", unsafe_allow_html=True)
+# Corrección de título
+st.markdown("<h3><span class='ubo-cyan'>🎥</span> Inferencia en Video Continuo</h3>", unsafe_allow_html=True)
 video_path = 'demo_video.mp4'
 if os.path.exists(video_path):
     v_col1, v_col2, v_col3 = st.columns([1, 3, 1])
