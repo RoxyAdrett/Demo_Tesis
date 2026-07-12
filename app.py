@@ -42,11 +42,26 @@ for box in resultado.boxes:
 col1, col2 = st.columns([2, 1])
 
 with col1:
-    st.subheader("Visualización del Mapa")
-    st.image(cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB), use_column_width=True)
+    st.subheader("Visualización en Tiempo Real")
+    # Asegúrate de que el archivo esté en la carpeta raíz
+    video_file = open('demo_video.mp4', 'rb')
+    video_bytes = video_file.read()
+    st.video(video_bytes)
 
 with col2:
-    st.subheader("Estado del Recinto") # Selector movido arriba de esto
+    # 1. Selector en orden ascendente arriba del título
+    ruta_carpeta = 'ref_images'
+    # Usamos sorted() para asegurar orden ascendente
+    imagenes = sorted([f for f in os.listdir(ruta_carpeta) if f.endswith('.jpg')])
+    selected_img_name = st.selectbox("Entrada de Datos\n\nSelecciona imagen a analizar:", imagenes)
+    selected_path = os.path.join(ruta_carpeta, selected_img_name)
+    
+    # Recalculamos la predicción con la imagen seleccionada aquí
+    img = cv2.imread(selected_path)
+    resultados = modelo.predict(source=img, imgsz=960, conf=0.25, verbose=False)
+    resultado = resultados[0]
+
+    st.subheader("Estado del Recinto")
     detecciones = [modelo.names[int(box.cls[0])] for box in resultado.boxes]
     df = pd.Series(detecciones).value_counts()
     
