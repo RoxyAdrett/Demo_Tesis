@@ -46,13 +46,21 @@ with col1:
     st.image(cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB), use_column_width=True)
 
 with col2:
-    st.divider()
-    # 1. Selector en orden ascendente arriba del título
+    # 1. Definir la carpeta
     ruta_carpeta = 'ref_images'
-    # Usamos sorted() para asegurar orden ascendente
-    imagenes = sorted([f for f in os.listdir(ruta_carpeta) if f.endswith('.jpg')])
-    selected_img_name = st.selectbox("Entrada de Datos\n\nSelecciona imagen a analizar:", imagenes)
+    
+    # 2. Obtener solo los nombres de los archivos para mostrar en el selectbox
+    nombres_imagenes = sorted([f for f in os.listdir(ruta_carpeta) if f.endswith('.jpg')])
+    
+    # 3. Crear el selector
+    selected_img_name = st.selectbox("Entrada de Datos\n\nSelecciona imagen a analizar:", nombres_imagenes)
+    
+    # 4. CRUCIAL: Crear la ruta completa para que el modelo la encuentre
     selected_path = os.path.join(ruta_carpeta, selected_img_name)
+    
+    # 5. Usar esa ruta completa en el modelo
+    img = cv2.imread(selected_path)
+    resultados = modelo.predict(source=img, imgsz=960, conf=0.25, verbose=False)
     
     # Recalculamos la predicción con la imagen seleccionada aquí
     img = cv2.imread(selected_path)
