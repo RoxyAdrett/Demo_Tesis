@@ -14,7 +14,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- ESTILOS CSS (PANEL CRISTAL OSCURO Y CORRECCIÓN DE LOGO) ---
+# --- ESTILOS CSS (RESPONSIVE + FONDO CLARO + PANEL OSCURO) ---
 st.markdown("""
 <style>
     /* Ocultar barra lateral y menús predeterminados */
@@ -23,29 +23,36 @@ st.markdown("""
     header {visibility: hidden;}
     footer {visibility: hidden;}
 
-    /* Fondo general de la página (Gradiente UBO que se verá en los bordes) */
+    /* --- FONDO EXTERIOR (Claro, suave, no satura la vista) --- */
     [data-testid="stAppViewContainer"] {
-        background-image: linear-gradient(135deg, #011528, #002D62);
-        background-attachment: fixed;
-        color: #FFFFFF;
+        background-color: #E6EEF4; /* Gris perlado con un toque de azul */
         font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     }
-    
-    /* --- EL NUEVO CONTENEDOR SEPARADOR (Efecto Glassmorphism Oscuro) --- */
+
+    /* --- CONTENEDOR PRINCIPAL (El "adentro" oscuro original) --- */
     .block-container {
-        padding-top: 2rem !important;
-        padding-bottom: 2rem !important;
-        padding-left: 3rem !important;
-        padding-right: 3rem !important;
-        max-width: 95% !important;
-        margin-top: 3vh; /* Margen superior para ver el fondo */
-        margin-bottom: 3vh; /* Margen inferior para ver el fondo */
-        background-color: rgba(2, 12, 27, 0.75) !important; /* Panel oscuro translúcido */
-        backdrop-filter: blur(12px); /* Efecto cristal borroso al fondo */
-        -webkit-backdrop-filter: blur(12px);
+        background-image: linear-gradient(135deg, #011528, #002D62) !important;
         border-radius: 20px;
-        border: 1px solid rgba(0, 164, 228, 0.25); /* Borde sutil Celeste UBO */
-        box-shadow: 0px 25px 50px rgba(0,0,0,0.7); /* Sombra profunda para despegarlo del fondo */
+        padding: 2.5rem !important;
+        margin-top: 3vh;
+        margin-bottom: 3vh;
+        box-shadow: 0px 15px 40px rgba(0, 0, 0, 0.25);
+        max-width: 95% !important;
+    }
+
+    /* --- RESPONSIVE DESIGN (Ajustes automáticos para celular) --- */
+    @media (max-width: 768px) {
+        .block-container {
+            padding: 1rem !important; /* Menos relleno interno */
+            margin-top: 0 !important; /* Pegado al borde superior en móvil */
+            margin-bottom: 0 !important;
+            border-radius: 0px; /* Sin bordes redondeados en celular */
+            max-width: 100% !important;
+        }
+        /* Ajustar tamaño de textos en móvil */
+        h1 { font-size: 1.8rem !important; line-height: 1.2 !important; }
+        h3 { font-size: 1.3rem !important; }
+        .footer-container p { font-size: 0.85rem !important; }
     }
 
     /* Textos generales en blanco */
@@ -58,23 +65,19 @@ st.markdown("""
         color: #00A4E4 !important;
     }
 
-    /* Alineación vertical del Encabezado (Centra el Logo y el Texto) */
-    div[data-testid="stHorizontalBlock"] {
-        align-items: center;
-    }
-
     /* --- CORRECCIÓN DEL LOGO --- */
-    /* Le quitamos el borde y sombra específicamente a la primera imagen (el logo) */
+    /* Para que el logo de fondo blanco se vea como una tarjeta limpia */
     div[data-testid="column"]:nth-child(1) div[data-testid="stImage"] img {
         border: none !important;
-        box-shadow: none !important;
-        background: transparent !important;
-        border-radius: 0px;
-        max-height: 100px; /* Controla el tamaño máximo del logo */
+        background-color: #FFFFFF !important;
+        border-radius: 12px;
+        padding: 8px; /* Pequeño margen interno para que el logo respire */
+        box-shadow: 0px 4px 10px rgba(0,0,0,0.3) !important;
+        max-height: 100px;
+        object-fit: contain;
     }
 
     /* --- TAMAÑO DE LAS IMÁGENES PRINCIPALES Y ANIMACIÓN --- */
-    /* Esto solo afectará a las imágenes de las cámaras y la galería */
     div[data-testid="column"]:nth-child(n+2) div[data-testid="stImage"] img,
     div[data-testid="stImage"]:nth-child(n+2) img {
         border-radius: 8px;
@@ -92,12 +95,12 @@ st.markdown("""
 
     /* Estilo de las tarjetas de métricas */
     [data-testid="stMetric"] {
-        background-color: rgba(0, 30, 60, 0.6); /* Más oscuras para contrastar con el panel */
+        background-color: rgba(0, 30, 60, 0.6);
         border: 1px solid rgba(0, 164, 228, 0.3);
         border-left: 6px solid #00A4E4; 
         padding: 15px;
         border-radius: 8px;
-        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.5);
+        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3);
         margin-bottom: 1rem;
         transition: transform 0.2s ease-in-out;
     }
@@ -107,7 +110,6 @@ st.markdown("""
         background-color: rgba(0, 40, 80, 0.8);
     }
     
-    /* Valor numérico de la métrica */
     [data-testid="stMetricValue"] {
         color: #00A4E4 !important; 
         font-size: 2.5rem !important;
@@ -120,7 +122,7 @@ st.markdown("""
         background-color: #00A4E4 !important;
     }
 
-    /* Pie de página (Footer) integrado al panel */
+    /* Pie de página (Footer) */
     .footer-container {
         text-align: center;
         padding: 20px;
@@ -157,7 +159,7 @@ def load_model():
 modelo = load_model()
 
 # --- ENCABEZADO (HEADER) INSTITUCIONAL UBO ---
-col_logo, col_text = st.columns([1.5, 6]) # Ajustado el ancho para que el logo respire
+col_logo, col_text = st.columns([1.5, 6]) 
 with col_logo:
     if os.path.exists("logo_ubo.png"):
         st.image("logo_ubo.png")
