@@ -128,7 +128,7 @@ st.markdown("""
     
     [data-testid="stMetric"]:hover {
         /* Misma animación de zoom que las imágenes */
-        transform: scale(1.03) !important; 
+        transform: scale(1.02) !important; 
         background-color: rgba(255, 255, 255, 0.1) !important;
         box-shadow: 0px 12px 25px rgba(0, 0, 0, 0.6) !important;
     }
