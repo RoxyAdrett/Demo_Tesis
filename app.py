@@ -16,14 +16,6 @@ def load_model():
 
 modelo = load_model()
 
-# --- SIDEBAR (Selector movido al lateral) ---
-with st.sidebar:
-    st.header("Entrada de Datos")
-    ruta_carpeta = 'ref_images'
-    imagenes = [f for f in os.listdir(ruta_carpeta) if f.endswith('.jpg')]
-    selected_img_name = st.selectbox("Selecciona imagen a analizar:", imagenes)
-    selected_path = os.path.join(ruta_carpeta, selected_img_name)
-
 # --- PREDICCIÓN ---
 img = cv2.imread(selected_path)
 resultados = modelo.predict(source=img, imgsz=960, conf=0.25, verbose=False)
@@ -39,14 +31,7 @@ for box in resultado.boxes:
     cv2.rectangle(img_bgr, (x1, y1), (x2, y2), color, 3)
 
 # --- INTERFAZ PRINCIPAL ---
-col1, col2 = st.columns([2, 1])
-
-with col1:
-    st.subheader("Visualización del Mapa")
-    st.image(cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB), use_column_width=True)
-
-with col2:
-    # 1. Definir la carpeta
+# 1. Definir la carpeta
     ruta_carpeta = 'ref_images'
     
     # 2. Obtener solo los nombres de los archivos para mostrar en el selectbox
@@ -61,6 +46,13 @@ with col2:
     # 5. Usar esa ruta completa en el modelo
     img = cv2.imread(selected_path)
     resultados = modelo.predict(source=img, imgsz=960, conf=0.25, verbose=False)
+col1, col2 = st.columns([2, 1])
+
+with col1:
+    st.subheader("Visualización del Mapa")
+    st.image(cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB), use_column_width=True)
+
+with col2:
     
     # Recalculamos la predicción con la imagen seleccionada aquí
     img = cv2.imread(selected_path)
