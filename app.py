@@ -14,7 +14,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- ESTILOS CSS (FONDO AZUL ORIGINAL + ACENTOS BLANCOS + RESPONSIVE) ---
+# --- ESTILOS CSS (FONDO AZUL + ACENTOS BLANCOS + BARRA BLANCA) ---
 st.markdown("""
 <style>
     /* Ocultar barra lateral y menús predeterminados */
@@ -23,7 +23,7 @@ st.markdown("""
     header {visibility: hidden;}
     footer {visibility: hidden;}
 
-    /* --- FONDO GENERAL (Gradiente Azul Marino UBO en toda la pantalla) --- */
+    /* --- FONDO GENERAL (Gradiente Azul Marino UBO) --- */
     [data-testid="stAppViewContainer"] {
         background-image: linear-gradient(135deg, #011528, #002D62) !important;
         background-attachment: fixed;
@@ -56,7 +56,7 @@ st.markdown("""
         color: #FFFFFF !important;
     }
 
-    /* Clase para iconos/detalles que antes eran celestes y ahora son blancos */
+    /* Clase para iconos/detalles en blanco */
     .ubo-white {
         color: #FFFFFF !important;
     }
@@ -77,7 +77,7 @@ st.markdown("""
     div[data-testid="stImage"]:nth-child(n+2) img {
         border-radius: 8px;
         box-shadow: 0px 8px 20px rgba(0,0,0,0.5);
-        border: 1px solid rgba(255, 255, 255, 0.3); /* Borde blanco sutil */
+        border: 1px solid rgba(255, 255, 255, 0.3);
         max-height: 60vh;
         object-fit: contain;
         margin: 0 auto;
@@ -90,11 +90,11 @@ st.markdown("""
 
     /* --- TARJETAS DE MÉTRICAS (Estilo Cristal con acentos Blancos) --- */
     [data-testid="stMetric"] {
-        background-color: rgba(0, 30, 60, 0.5); /* Azul profundo translúcido */
+        background-color: rgba(0, 30, 60, 0.5);
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.2);
-        border-left: 6px solid #FFFFFF; /* Borde izquierdo BLANCO */
+        border-left: 6px solid #FFFFFF;
         padding: 15px;
         border-radius: 8px;
         box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.4);
@@ -108,14 +108,14 @@ st.markdown("""
     }
     
     [data-testid="stMetricValue"] {
-        color: #FFFFFF !important; /* Valor en BLANCO */
+        color: #FFFFFF !important;
         font-size: 2.8rem !important;
         font-weight: 800;
         text-shadow: 0px 0px 10px rgba(255, 255, 255, 0.3);
     }
 
-    /* Barra de progreso personalizada (Blanca) */
-    .stProgress > div > div > div > div {
+    /* --- BARRA DE PROGRESO (Reforzada a Blanco Puro) --- */
+    [data-testid="stProgress"] > div > div > div {
         background-color: #FFFFFF !important;
     }
 
@@ -140,7 +140,7 @@ st.markdown("""
         border-radius: 20px;
         font-size: 0.85rem;
         font-weight: bold;
-        background-color: rgba(255, 255, 255, 0.1); /* Fondo blanco semitransparente */
+        background-color: rgba(255, 255, 255, 0.1);
         color: #FFFFFF;
         border: 1px solid #FFFFFF;
         margin-right: 10px;
@@ -217,8 +217,8 @@ with col_mapa:
     for box in resultado.boxes:
         x1, y1, x2, y2 = map(int, box.xyxy[0])
         cls = int(box.cls[0])
-        # Blanco (255,255,255) para libres, Rojo intenso (50,50,255) para ocupados
-        color = (255, 255, 255) if cls == 0 else (50, 50, 255) 
+        # Cajas celestes UBO (228, 164, 0) en BGR para libres, Rojo intenso (50, 50, 255) para ocupados
+        color = (228, 164, 0) if cls == 0 else (50, 50, 255) 
         cv2.rectangle(img_bgr, (x1, y1), (x2, y2), color, 3) 
     
     st.image(cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB), use_container_width=True)
