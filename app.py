@@ -17,7 +17,7 @@ def load_model():
 modelo = load_model()
 
 # Selección de imagen
-img_files = ['im01.jpg', 'im02.jpg', 'im03.jpg']
+img_files = ['ref_images/im01.jpg', 'ref_images/im02.jpg', 'ref_images/im03.jpg']
 selected_img = st.selectbox("Selecciona una imagen de prueba:", img_files)
 
 # Ejecutar tu lógica de predicción
