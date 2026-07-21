@@ -185,7 +185,7 @@ modelo = load_model()
 col_logo, col_text = st.columns([1.5, 6]) 
 with col_logo:
     if os.path.exists("logo_ubo.png"):
-        st.image("logo_ubo.png")
+        st.image("logo_ubo.png", width="stretch")
     else:
         st.markdown("<h1 style='text-align: center; color: #FFFFFF; font-size: 3rem;'>UBO</h1>", unsafe_allow_html=True)
 
@@ -201,13 +201,25 @@ with col_text:
 
 st.markdown("---")
 
-# --- LÓGICA PREVIA ---
+# --- 1. VIDEO DE DEMOSTRACIÓN (ARRIBA) ---
+st.markdown("<h3><span class='ubo-white'>🎥</span> Ejemplo entrenamiento en Video Continuo</h3>", unsafe_allow_html=True)
+video_path = 'demo_video.mp4'
+if os.path.exists(video_path):
+    v_col1, v_col2, v_col3 = st.columns([1, 3, 1])
+    with v_col2:
+        st.video(video_path)
+else:
+    st.warning(f"El video '{video_path}' no se encuentra en el repositorio.")
+
+st.markdown("---")
+
+# --- 2. LÓGICA PREVIA ---
 ruta_carpeta = 'ref_images'
 imagenes = sorted([f for f in os.listdir(ruta_carpeta) if f.endswith('.jpg')])
 
-# --- INTERFAZ PRINCIPAL (DISEÑO A DOS COLUMNAS) ---
+# --- 3. INTERFAZ PRINCIPAL (DISEÑO A DOS COLUMNAS) ---
 col_mapa, col_panel = st.columns([2.5, 1.2]) 
-
+    
 with col_panel:
     st.markdown("<h3><span class='ubo-white'>⚙️</span> Panel de Control</h3>", unsafe_allow_html=True)
     selected_img_name = st.selectbox("Seleccione la fuente de entrada:", imagenes)
@@ -247,9 +259,9 @@ with col_mapa:
         color = (228, 164, 0) if cls == 0 else (50, 50, 255) 
         cv2.rectangle(img_bgr, (x1, y1), (x2, y2), color, 3) 
     
-    st.image(cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB), use_container_width=True)
+    st.image(cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB), width="stretch")
 
-# --- GALERÍA INFERIOR ---
+# --- 4. GALERÍA INFERIOR ---
 st.markdown("---")
 st.markdown("<h3><span class='ubo-white'>📂</span> Historial de Capturas</h3>", unsafe_allow_html=True)
 
@@ -261,18 +273,7 @@ for i, img_name in enumerate(imagenes[:5]):
     ruta_img = os.path.join(ruta_carpeta, img_name)
     img_pil = Image.open(ruta_img).resize(TAMANO_GALERIA)
     with cols_galeria[i]:
-        st.image(img_pil, caption=f"{img_name}", use_container_width=True)
-
-# --- VIDEO DE DEMOSTRACIÓN ---
-st.markdown("---")
-st.markdown("<h3><span class='ubo-white'>🎥</span> Ejemplo entrenamiento en Video Continuo</h3>", unsafe_allow_html=True)
-video_path = 'demo_video.mp4'
-if os.path.exists(video_path):
-    v_col1, v_col2, v_col3 = st.columns([1, 3, 1])
-    with v_col2:
-        st.video(video_path)
-else:
-    st.warning(f"El video '{video_path}' no se encuentra en el repositorio.")
+        st.image(img_pil, caption=f"{img_name}", width="stretch")
 
 # --- FOOTER INSTITUCIONAL ---
 st.markdown("""
