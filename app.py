@@ -207,9 +207,7 @@ imagenes = sorted([f for f in os.listdir(ruta_carpeta) if f.endswith('.jpg')])
 
 # --- INTERFAZ PRINCIPAL (DISEÑO A DOS COLUMNAS) ---
 col_mapa, col_panel = st.columns([2.5, 1.2]) 
-
-with col_panel:
-    # --- VIDEO DE DEMOSTRACIÓN ---
+ # --- VIDEO DE DEMOSTRACIÓN ---
     st.markdown("---")
     st.markdown("<h3><span class='ubo-white'>🎥</span> Ejemplo entrenamiento en Video Continuo</h3>", unsafe_allow_html=True)
     video_path = 'demo_video.mp4'
@@ -221,6 +219,8 @@ with col_panel:
         st.warning(f"El video '{video_path}' no se encuentra en el repositorio.")
 
     
+with col_panel:
+   
     st.markdown("<h3><span class='ubo-white'>⚙️</span> Panel de Control</h3>", unsafe_allow_html=True)
     selected_img_name = st.selectbox("Seleccione la fuente de entrada:", imagenes)
     
