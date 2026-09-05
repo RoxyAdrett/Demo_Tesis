@@ -179,6 +179,16 @@ st.markdown("""
 def load_model():
     return YOLO('best.pt')
 
+
+def normalizar_clase(nombre):
+    """Devuelve la categoría de plaza usando las etiquetas del modelo."""
+    clase = str(nombre).strip().lower().replace('-', '_').replace(' ', '_')
+    if clase in {'free_space', 'free', 'available', 'available_space', 'libre', 'disponible'}:
+        return 'free_space'
+    if clase in {'occupied_space', 'occupied', 'busy', 'ocupado', 'ocupada'}:
+        return 'occupied_space'
+    return None
+
 modelo = load_model()
 
 # --- ENCABEZADO (HEADER) INSTITUCIONAL UBO ---
@@ -215,7 +225,11 @@ st.markdown("---")
 
 # --- 2. LÓGICA PREVIA ---
 ruta_carpeta = 'ref_images'
-imagenes = sorted([f for f in os.listdir(ruta_carpeta) if f.endswith('.jpg')])
+extensiones_imagen = {'.jpg', '.jpeg', '.png', '.webp', '.bmp'}
+imagenes = sorted(
+    f for f in os.listdir(ruta_carpeta)
+    if os.path.splitext(f)[1].lower() in extensiones_imagen
+)
 
 # --- 3. INTERFAZ PRINCIPAL (DISEÑO A DOS COLUMNAS) ---
 col_mapa, col_panel = st.columns([2.5, 1.2]) 
@@ -226,21 +240,27 @@ with col_panel:
     
     # Procesamiento
     selected_path = os.path.join(ruta_carpeta, selected_img_name)
-    img = cv2.imread(selected_path)
+    # PIL identifica el formato real aunque la extensión del archivo sea incorrecta.
+    with Image.open(selected_path) as imagen_pil:
+        img = cv2.cvtColor(np.array(imagen_pil.convert('RGB')), cv2.COLOR_RGB2BGR)
     resultados = modelo.predict(source=img, imgsz=960, conf=0.25, verbose=False)
     resultado = resultados[0]
 
     # Cálculos
-    detecciones = [modelo.names[int(box.cls[0])] for box in resultado.boxes]
-    df = pd.Series(detecciones).value_counts()
-    libres = int(df.get("free_space", 0))
-    ocupados = int(df.get("occupied_space", 0))
+    detecciones = [
+        normalizar_clase(modelo.names[int(box.cls[0])])
+        for box in resultado.boxes
+    ]
+    df = pd.Series([clase for clase in detecciones if clase is not None]).value_counts()
+    libres = int(df.get('free_space', 0))
+    ocupados = int(df.get('occupied_space', 0))
     total = libres + ocupados
     
     # Porcentaje de ocupación
     pct_ocupacion = (ocupados / total) * 100 if total > 0 else 0
 
     st.markdown("<br><h3><span class='ubo-white'>📊</span> Análisis del Recinto</h3>", unsafe_allow_html=True)
+    st.metric("Total de plazas", total)
     st.metric("Libres (Disponibles)", libres)
     st.metric("Ocupados", ocupados)
     
@@ -255,9 +275,12 @@ with col_mapa:
     for box in resultado.boxes:
         x1, y1, x2, y2 = map(int, box.xyxy[0])
         cls = int(box.cls[0])
-        # Cajas celestes UBO (228, 164, 0) en BGR para libres, Rojo intenso (50, 50, 255) para ocupados
-        color = (228, 164, 0) if cls == 0 else (50, 50, 255) 
-        cv2.rectangle(img_bgr, (x1, y1), (x2, y2), color, 3) 
+        clase = normalizar_clase(modelo.names[cls])
+        if clase is None:
+            continue
+        # Cajas celestes para libres y rojas para ocupados, en formato BGR.
+        color = (228, 164, 0) if clase == 'free_space' else (50, 50, 255)
+        cv2.rectangle(img_bgr, (x1, y1), (x2, y2), color, 3)
     
     st.image(cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB), width="stretch")
 
