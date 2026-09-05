@@ -230,12 +230,11 @@ with col_panel:
     resultados = modelo.predict(source=img, imgsz=960, conf=0.25, verbose=False)
     resultado = resultados[0]
 
-    # Cálculos
-    detecciones = [modelo.names[int(box.cls[0])] for box in resultado.boxes]
-    df = pd.Series(detecciones).value_counts()
-    libres = int(df.get("free_space", 0))
-    ocupados = int(df.get("occupied_space", 0))
-    total = libres + ocupados
+    # Cálculos alineados con los colores ya usados para dibujar las detecciones
+    clases = [int(box.cls[0]) for box in resultado.boxes]
+    libres = clases.count(0)
+    ocupados = len(clases) - libres
+    total = len(clases)
     
     # Porcentaje de ocupación
     pct_ocupacion = (ocupados / total) * 100 if total > 0 else 0
