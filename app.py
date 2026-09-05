@@ -181,7 +181,7 @@ def load_model():
 
 def normalizar_clase(nombre):
     clase = str(nombre).strip().lower().replace('-', '_').replace(' ', '_')
-    if clase in {'free_space', 'free', 'available', 'available_space', 'libre', 'disponible'}:
+    if clase in {'free_space', 'free', 'vacio', 'available_space', 'libre', 'disponible'}:
         return 'free_space'
     if clase in {'occupied_space', 'occupied', 'busy', 'ocupado', 'ocupada'}:
         return 'occupied_space'
