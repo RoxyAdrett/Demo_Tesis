@@ -179,6 +179,14 @@ st.markdown("""
 def load_model():
     return YOLO('best.pt')
 
+def normalizar_clase(nombre):
+    clase = str(nombre).strip().lower().replace('-', '_').replace(' ', '_')
+    if clase in {'free_space', 'free', 'available', 'available_space', 'libre', 'disponible'}:
+        return 'free_space'
+    if clase in {'occupied_space', 'occupied', 'busy', 'ocupado', 'ocupada'}:
+        return 'occupied_space'
+    return None
+
 modelo = load_model()
 
 # --- ENCABEZADO (HEADER) INSTITUCIONAL UBO ---
@@ -231,8 +239,11 @@ with col_panel:
     resultado = resultados[0]
 
     # Cálculos
-    detecciones = [modelo.names[int(box.cls[0])] for box in resultado.boxes]
-    df = pd.Series(detecciones).value_counts()
+    detecciones = [
+        normalizar_clase(modelo.names[int(box.cls[0])])
+        for box in resultado.boxes
+    ]
+    df = pd.Series([clase for clase in detecciones if clase is not None]).value_counts()
     libres = int(df.get("free_space", 0))
     ocupados = int(df.get("occupied_space", 0))
     total = libres + ocupados
@@ -255,8 +266,10 @@ with col_mapa:
     for box in resultado.boxes:
         x1, y1, x2, y2 = map(int, box.xyxy[0])
         cls = int(box.cls[0])
-        # Cajas celestes UBO (228, 164, 0) en BGR para libres, Rojo intenso (50, 50, 255) para ocupados
-        color = (228, 164, 0) if cls == 0 else (50, 50, 255) 
+        clase = normalizar_clase(modelo.names[cls])
+        if clase is None:
+            continue
+        color = (228, 164, 0) if clase == 'free_space' else (50, 50, 255)
         cv2.rectangle(img_bgr, (x1, y1), (x2, y2), color, 3) 
     
     st.image(cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB), width="stretch")
